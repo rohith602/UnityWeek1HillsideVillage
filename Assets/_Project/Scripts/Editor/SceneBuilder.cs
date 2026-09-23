@@ -677,6 +677,15 @@ namespace Week1.EditorTools
                                new Vector3(0.50f * MapSize, 20f, 0.50f * MapSize)),
             };
 
+            // Rendering to a RenderTexture requires a real graphics device. Under
+            // -nographics there is none and cam.Render() segfaults the editor, so skip
+            // the captures rather than take the whole build down with them.
+            if (SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Null)
+            {
+                Debug.Log("SHOTS_SKIPPED no graphics device (-nographics)");
+                return;
+            }
+
             Directory.CreateDirectory(ShotDir);
             var prevPos = cam.transform.position;
             var prevRot = cam.transform.rotation;
